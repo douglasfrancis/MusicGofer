@@ -25,7 +25,7 @@ const style = {
   p: 4,
 };
 
-export default function AddEvent({open, setOpen, chosenDate}) {
+export default function AddEvent({open, setOpen, chosenDate, getEvents}) {
   const handleClose = () => {
       setOpen(false)
       clearForm()
@@ -33,8 +33,6 @@ export default function AddEvent({open, setOpen, chosenDate}) {
 //List for Select Options
   const [musicians, setMusicians] = useState([])
   const [venues, setVenues] = useState([])
-
-  const [venueChoice, setVenueChoice] = useState('');
 
   //Form state
   const [artist, setArtist] = useState('');
@@ -110,6 +108,7 @@ const payload={
           axios.post("http://localhost:4000/add-event", payload).then(function(res){
             toast.success(res.data.msg)
             setEventId(res.data.event._id)
+            getEvents()
           handleClose()
         })
       } else if(artist) {
@@ -117,7 +116,8 @@ const payload={
         axios.post("http://localhost:4000/add-event", payload).then(function(res){
             toast.success(res.data.msg)
             setEventId(res.data.event._id)
-            
+            getEvents()
+
           handleClose()
         })
       }

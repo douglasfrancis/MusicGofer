@@ -31,20 +31,7 @@ export default function Dashboard() {
                 </Paper>
               </Grid>
 
-              {/* Profit */}
-              <Grid item xs={6} sm={6} md={4} >
-                <Paper sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: 220,
-
-                  }}>
-                  Current Monthly Profit £3,245
-                </Paper>
-              </Grid>
+              
 
       </Grid>
     )

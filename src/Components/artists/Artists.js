@@ -50,13 +50,13 @@ export default function Artists() {
   return (
     <Box sx={{textAlign: 'center'}}>
 
-      {artist && <ViewArtist artist={artist} openArtist={openArtist} setOpenArtist={setOpenArtist} setArtist={setArtist}/>}
+      {artist && <ViewArtist artist={artist} openArtist={openArtist} setOpenArtist={setOpenArtist} setArtist={setArtist} getMusicians={getMusicians}/>}
 
       <Fab color="primary" aria-label="add" sx={{margin: '20px' }}>
         <AddIcon onClick={handleOpen} />
       </Fab>
 
-      <AddMusician open={open} setOpen={setOpen} />
+      <AddMusician open={open} setOpen={setOpen} getMusicians={getMusicians}/>
 
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">

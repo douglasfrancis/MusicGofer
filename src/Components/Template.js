@@ -9,9 +9,10 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
-import AuthContext from '../Context/AuthContext'
+import {useAuth} from '../Context/AuthContext'
+import Button from '@mui/material/Button';
+import RequireAuth from './Auth/RequireAuth'
 
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -20,7 +21,6 @@ import {
     BrowserRouter as Router,
     Routes,
     Route,
-    Link
   } from "react-router-dom";
 
 //pages
@@ -106,7 +106,7 @@ function DashboardContent() {
     setOpen(!open);
   };
 
-  const {logoutUser} = React.useContext(AuthContext)
+  const {logoutUser} = useAuth()
 
   function handleLogout(){
 
@@ -137,8 +137,16 @@ function DashboardContent() {
             >
               <MenuIcon />
             </IconButton>
-            <img style={{height: '40px'}} src={require('../images/MusicGofer_logo2_black.png')} alt='Music Gofer Logo' />
-            <button onClick={handleLogout}>Logout</button>
+            <Box flexGrow={1} justifyContent={'space-between'} display={'flex'}>
+              
+              <img style={{height: '40px'}} src={require('../images/MusicGofer_logo2_black.png')} alt='Music Gofer Logo' />
+
+             
+              <Button align='right'  onClick={handleLogout} variant="outlined" >Logout</Button>
+
+
+              </Box>
+
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -175,11 +183,14 @@ function DashboardContent() {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         
             <Routes>
-                <Route exact path='/' element={<Dashboard/>} />
+                <Route exact path='/' element={<RequireAuth><Dashboard/></RequireAuth>} />
                 <Route exact path='/login' element={<Login/>} />
-                <Route exact path='/calendar' element={<Calendar/>} />
-                <Route exact path='/artists' element={<Artists/>} />
-                <Route exact path='/venues' element={<Venues/>} />
+                <Route exact path='/calendar' element={<RequireAuth > 
+                                                          <Calendar/>
+                                                       </RequireAuth>} />
+
+                <Route exact path='/artists' element={<RequireAuth > <Artists/></RequireAuth>} />
+                <Route exact path='/venues' element={<RequireAuth > <Venues/></RequireAuth>} />
                 <Route exact path='/confirm/:id' element={<Confirm/>} />
                 <Route exact path='/decline/:id' element={<Decline/>} />
 

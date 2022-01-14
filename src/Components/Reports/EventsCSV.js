@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import Box from '@mui/material/Box';
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 import axios from 'axios';
+import DownloadIcon from '@mui/icons-material/Download';
 
 
 
@@ -38,7 +39,7 @@ export default function EventsCSV() {
       
     
     return (
-        <div>
+        <Box  display={'flex'} flexDirection={'column'} alignItems={'center'}>
                 <h3>Event Data</h3>
                     <DateRangePicker
                 startText="From"
@@ -55,8 +56,8 @@ export default function EventsCSV() {
                 </>
                 )}
             />
-            <CSVLink headers={headers} filename='Music-Gofer.csv' data={eventData}><Button>Download</Button></CSVLink>
+            <CSVLink headers={headers} filename='Music-Gofer.csv' data={eventData}><Button sx={{mt: 2}} variant='contained' endIcon={<DownloadIcon />}>Download</Button></CSVLink>
 
-        </div>
+        </Box>
     )
 }

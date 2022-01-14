@@ -27,9 +27,7 @@ const style = {
   p: 4,
 };
 
-const color = red[500];
-
-export default function ViewEvent({openEvent, setOpenEvent, event, setEvent, eventDate}) {
+export default function ViewEvent({openEvent, setOpenEvent, event, setEvent, eventDate, getEvents}) {
   const handleClose = () => {
       setOpenEvent(false)
       clearForm()
@@ -38,9 +36,6 @@ export default function ViewEvent({openEvent, setOpenEvent, event, setEvent, eve
 //List for Select Options
   const [musicians, setMusicians] = useState([])
   const [venues, setVenues] = useState([])
-
-  const [venueChoice, setVenueChoice] = useState('');
-
 
   //Form state
   const [artist, setArtist] = useState(event.artist);
@@ -123,6 +118,7 @@ const deleteEvent = () => {
   axios.post('http://localhost:4000/delete-event', {id:event._id}).then(function(res){
     toast.success(res.data)
   })
+  getEvents()
 }
 
   const changeSets=(i, e)=>{

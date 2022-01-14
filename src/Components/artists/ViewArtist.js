@@ -20,7 +20,7 @@ const style = {
     p: 4,
   };
 
-export default function ViewArtist( {artist, openArtist, setOpenArtist, setArtist}) {
+export default function ViewArtist( {artist, openArtist, setOpenArtist, setArtist, getMusicians}) {
   
     const [img, setImg]= useState(artist.img)
     const [name, setName] = useState(artist.name)
@@ -46,6 +46,7 @@ export default function ViewArtist( {artist, openArtist, setOpenArtist, setArtis
       axios.post('http://localhost:4000/update-artist', payload).then(function(res){
        
           toast.success(res.data)
+          getMusicians()
        
       })
     }

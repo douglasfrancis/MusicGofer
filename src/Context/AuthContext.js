@@ -1,40 +1,33 @@
-import React, { createContext, useState } from "react";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "firebase/auth";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { getAuth, signInWithEmailAndPassword, signOut, sendPasswordResetEmail,onAuthStateChanged } from "firebase/auth";
 import { toast } from "react-toastify";
 import app from '../Firebase'
 
 
 const AuthContext = createContext()
-export default AuthContext
+
+export function useAuth(){
+  return useContext(AuthContext)
+}
 
 export function AuthProvider({children}){
 
     const [currentUser, setCurrentUser] = useState()
+    const [loading, setLoading] = useState(true)
+
+    useEffect(()=>{
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+       setCurrentUser(user)
+       setLoading(false)
+      });
+
+      return unsubscribe
+    },[])
 
     const auth = getAuth(app);
 
-    const login = (email, password) =>{
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          setCurrentUser(user)
-          toast.success("Successfully logged in")
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-         console.log(errorCode, errorMessage)
-         toast.error(errorMessage)
-        });
-      
-    } 
-
     const logoutUser = () =>{
-        signOut(auth).then(() => {
-            toast.success("Successfully logged out")
-          }).catch((error) => {
-            console.log(error)
-          });
+        signOut(auth)
     }
 
     const resetPassword = (email) =>{
@@ -50,12 +43,13 @@ export function AuthProvider({children}){
     
 
     const value= {
-         login, logoutUser, currentUser, setCurrentUser, resetPassword
+         logoutUser, currentUser, setCurrentUser, resetPassword
     }
 
     return (
         <AuthContext.Provider value={value}>
-            {children}
+          {console.log(currentUser)}
+            {!loading && children}
         </AuthContext.Provider>
     )
 }

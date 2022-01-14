@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { toast } from 'react-toastify';
-import AuthContext from '../../Context/AuthContext'
+import {useAuth} from '../../Context/AuthContext'
 import axios from 'axios'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import app from '../../Firebase'
@@ -22,13 +22,13 @@ const style = {
   p: 4,
 };
 
-export default function AddMusician({open, setOpen}) {
+export default function AddMusician({open, setOpen, getMusicians}) {
   const handleClose = () => {
     setOpen(false);
     clearForm()
   }
 
- const { setCurrentUser} = useContext(AuthContext)
+ const { setCurrentUser} = useAuth()
   //Form state
   const [img, setImg]=useState("https://caretestresources.s3.eu-west-2.amazonaws.com/avatar.png")
   const [name, setName] = useState("")
@@ -62,6 +62,7 @@ const uploadFile=()=>{
           setCurrentUser(user)
           setOpen(false)
           clearForm()
+          getMusicians()
          
         })
         .catch((error) => { 

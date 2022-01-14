@@ -53,9 +53,9 @@ export default function Calendar() {
         <AddIcon onClick={handleOpen} />
       </Fab>
 
-      <AddEvent open={open} setOpen={setOpen} chosenDate={date}/>
+      <AddEvent getEvents={getEvents} open={open} setOpen={setOpen} chosenDate={date}/>
 
-      {event && <ViewEvent openEvent={openEvent} setOpenEvent={setOpenEvent} event={event} setEvent={setEvent} eventDate={eventDate} />}
+      {event && <ViewEvent openEvent={openEvent} setOpenEvent={setOpenEvent} event={event} setEvent={setEvent} eventDate={eventDate} getEvents={getEvents}/>}
 
       <FullCalendar
          plugins={[ dayGridPlugin, interactionPlugin, listPlugin ]}
