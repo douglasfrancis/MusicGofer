@@ -15,6 +15,7 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 600,
+    maxHeight: '90vh',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -105,14 +106,14 @@ const removeSet = (i)=>{
                 <TextField multiline rows={2} id="outlined-basic" label="Equipment Required" variant="outlined" value={equipment} onChange={(e)=>setEquipment(e.target.value)} />
                 <TextField id="outlined-basic" label="Contact Email Address" variant="outlined" value={contactEmail} onChange={(e)=>setContactEmail(e.target.value)}  />
                 <TextField id="outlined-basic" label="Contact Name" variant="outlined" value={contactName} onChange={(e)=>setContactName(e.target.value)} />
-               <div>
-               {setTimes.map((set, i)=><div  style={{display: 'flex', alignItems: 'center', justifyContent: 'space-evenly'}}> <p key={i}>{`${set.from} - ${set.to}`}</p><DeleteOutlineIcon onClick={()=> removeSet(i)}/></div>)}
-                   <Box sx={{display: 'flex', m: '0 auto 10px auto'}} >
-                      <TimePicker style={{margin: '5px'}}  value={from} label="From" onChange={(newValue) => {setFrom(newValue);}} renderInput={(params) => <TextField {...params} />}/>
-                      <TimePicker sx={{margin: '5px'}} value={to} label="To" onChange={(newValue) => {setTo(newValue);}} renderInput={(params) => <TextField {...params} />}/>
-                   </Box>
-                <Button variant="contained" onClick={addSet}>Add Set</Button>
+               
+               {setTimes.map((set, i)=><div  style={{display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', width: '100%'}}> <p key={i}>{`${set.from} - ${set.to}`}</p><DeleteOutlineIcon onClick={()=> removeSet(i)}/></div>)}
+                   <div  style={{width: '100%'}} >
+                      <TimePicker  value={from} label="From" onChange={(newValue) => {setFrom(newValue);}} renderInput={(params) => <TextField sx={{m: '5px'}} {...params} />}/>
+                      <TimePicker value={to} label="To" onChange={(newValue) => {setTo(newValue);}} renderInput={(params) => <TextField sx={{m: '5px'}} {...params} />}/>
                    </div>
+                <Button variant="contained" onClick={addSet}>Add Set</Button>
+                  
 
                 <Button variant="contained" onClick={updateVenue}>Update Venue</Button>
 

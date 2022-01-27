@@ -51,12 +51,14 @@ export default function AddMusician({open, setOpen, getMusicians}) {
         createUserWithEmailAndPassword(auth, email, "password")
         .then((userCredential) => {
           axios.post(`${process.env.REACT_APP_MG_API}/add-artist`, {_id: userCredential.user.uid, img, name, category, number, email, youtube, role: 'user'}).then(function(res){
-      toast.success(res.data)
-      setOpen(false)
+          toast.success(res.data)
+          setOpen(false)
           clearForm()
           getMusicians()
     })
-          
+          axios.post(`${process.env.REACT_APP_MG_API}/new-artist-email`, {email, name}).then(function(res){
+            toast.success(res.data.msg)
+          })
         })
         .catch((error) => { 
             console.log(error)
