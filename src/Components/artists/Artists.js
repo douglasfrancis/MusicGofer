@@ -32,7 +32,7 @@ export default function Artists() {
 
   const getMusicians =()=>{
 
-    axios.get('http://localhost:4000/get-artists').then(function(res){
+    axios.get(`${process.env.REACT_APP_MG_API}/get-artists`).then(function(res){
       setArtistDb(res.data)
     })
   }
@@ -64,6 +64,7 @@ export default function Artists() {
           <TableRow>
             <TableCell>Artists</TableCell>
             <TableCell>Name</TableCell>
+            <TableCell align="left">Category</TableCell>
             <TableCell align="left">Number</TableCell>
             <TableCell align="left">Email</TableCell>
             <TableCell align="center">Youtube</TableCell>
@@ -77,9 +78,8 @@ export default function Artists() {
             >
               <TableCell ><img style={{height: '60px', width:'60px', borderRadius:'50%'}} src={musician.img} alt='Artist'/></TableCell>
 
-              <TableCell component="th" scope="artistDb">
-                {musician.name}
-              </TableCell>
+              <TableCell component="th" scope="artistDb">{musician.name}</TableCell>
+              <TableCell align="left">{musician.category}</TableCell>
               <TableCell align="left">{musician.number}</TableCell>
               <TableCell align="left">{musician.email}</TableCell>
               {musician.youtube ? <TableCell align="center"><a href={musician.youtube} target='_blank' ><YouTubeIcon sx={{ color: 'red' }}/></a></TableCell>:<TableCell align="right"></TableCell>}

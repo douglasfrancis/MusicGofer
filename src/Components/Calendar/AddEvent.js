@@ -11,7 +11,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import DatePicker from '@mui/lab/DatePicker';
 import axios from 'axios';
 import {toast} from 'react-toastify'
-
+import ArtistCategory from './ArtistCategory';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 const style = {
   position: 'absolute',
@@ -35,7 +36,7 @@ export default function AddEvent({open, setOpen, chosenDate, getEvents}) {
   const [venues, setVenues] = useState([])
 
   //Form state
-  const [artist, setArtist] = useState('');
+  const [artists, setArtists] = useState([]);
   const [venueName, setVenueName] = useState('');
   const [venueId, setVenueId] = useState('');
   const [artistFee, setArtistFee] = useState(0)
@@ -49,39 +50,58 @@ export default function AddEvent({open, setOpen, chosenDate, getEvents}) {
   
   const [eventId, setEventId] = useState("")
 
+  const removeArtist = ( i)=>{
+    artists.splice(i, 1)
+
+ }
+
 useEffect(()=>{
-    getMusicians();
     getVenues();
 }, [])
+
+
 
 useEffect(()=>{
 setDate(chosenDate)
 }, [chosenDate])
 
 useEffect(()=>{
-  if(artist){
+  if(artists){
     setStatus("Pending");
     setBackgroundColor("#ffd700")
     setBorderColor("#ffd700")
+    
   } else {
     setStatus("Unassigned");
     setBackgroundColor("Red")
     setBorderColor("Red")
   }
-}, [artist])
+}, [artists, removeArtist])
+
+
 
 useEffect(()=>{
   if(eventId) sendEmail()
   }, [eventId])
 
-const getMusicians = () =>{
-    axios.get('http://localhost:4000/get-artists').then(function(res){
-        setMusicians(res.data)
-    })
-}
+    let newDate;
+  useEffect(()=>{
+    if(setTimes) {
+      newDate = new Date(date)
+      const time = setTimes[0]?.from
+      const newTime = time?.split(':')
+      if(newTime){
+        newDate.setHours(newTime[0],newTime[1],0,0);
+        setDate(newDate)
+      } 
+    }
+    }, [setTimes])
+
+
+
 
 const getVenues = () =>{
-    axios.get('http://localhost:4000/get-venues').then(function(res){
+    axios.get(`${process.env.REACT_APP_MG_API}/get-venues`).then(function(res){
         setVenues(res.data)
     })
 }
@@ -89,31 +109,33 @@ const getVenues = () =>{
 const getVenueById = (id) =>{
 
   const idPayload = {id}
-  axios.post('http://localhost:4000/get-venue-by-id', idPayload).then(function(res){
+  axios.post(`${process.env.REACT_APP_MG_API}/get-venue-by-id`, idPayload).then(function(res){
         const {artistFee, venueFee, setTimes, name} = res.data
-        setArtistFee(artistFee); setVenueFee(venueFee);setSetTimes(setTimes);setVenueName(name)
+        setArtistFee(artistFee); setVenueFee(venueFee);setSetTimes(setTimes);setVenueName(name);
 })
 }
+
+
 const payload={
-    title: `${venueName}(${artist})`, artist, venueName, venueId, artistFee, venueFee, date, setTimes, notes, status, backgroundColor,borderColor, allDay: false, display: 'block'
+    title: `${venueName}(To Be sorted)`, artists, venueName, venueId, artistFee, venueFee, date, setTimes, notes, status, backgroundColor,borderColor, allDay: false, display: 'block'
 }
   const clearForm = () =>{
-      setArtist("");setVenueId("");setDate(null); setArtistFee(0);setVenueFee(0);setNotes("");setSetTimes([])
+      setArtists([]);setVenueId("");setDate(null); setArtistFee(0);setVenueFee(0);setNotes("");setSetTimes([])
   }
 
   const addEvent = () => {
       if(!venueName || !date || !artistFee || !venueFee){
         toast.error("Please add all fields")
-      } else if(!artist) {
-          axios.post("http://localhost:4000/add-event", payload).then(function(res){
+      } else if(!artists) {
+          axios.post(`${process.env.REACT_APP_MG_API}/add-event`, payload).then(function(res){
             toast.success(res.data.msg)
             setEventId(res.data.event._id)
             getEvents()
           handleClose()
         })
-      } else if(artist) {
+      } else if(artists) {
         
-        axios.post("http://localhost:4000/add-event", payload).then(function(res){
+        axios.post(`${process.env.REACT_APP_MG_API}/add-event`, payload).then(function(res){
             toast.success(res.data.msg)
             setEventId(res.data.event._id)
             getEvents()
@@ -124,7 +146,7 @@ const payload={
   }
 
   const sendEmail = () =>{
-    axios.post("http://localhost:4000/new-event", {eventId: eventId, name: artist, email: "dougiefrancis@gmail.com", venueName, artistFee, setTimes, date, notes}).then(function(res){
+    axios.post(`${process.env.REACT_APP_MG_API}/new-event`, {eventId: eventId, name: artists, email: "dougiefrancis@gmail.com", venueName, artistFee, setTimes, date, notes}).then(function(res){
       if(res.data.success) {
         toast.success(res.data.msg)
       } else {
@@ -139,6 +161,8 @@ const payload={
     setSetTimes(newSets)
   }
 
+
+
   return (
     <div>
       <Modal
@@ -151,22 +175,11 @@ const payload={
         <Box sx={style}>
             <Box component="form"
             sx={{'& > :not(style)': { m: 1, width: '40ch' }, textAlign:'center'}} noValidate autoComplete="off">
+                
 
-                <FormControl sx={{ m: 1, minWidth: 120 }}>
-                    <InputLabel id="demo-simple-select-helper-label">Artist</InputLabel>
-                    <Select
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    value={artist}
-                    label="Artist"
-                    onChange={(e)=>setArtist(e.target.value)}
-                    >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
-                    {musicians.map((musician, i)=><MenuItem key={i}  value={musician.name}>{musician.name}</MenuItem>)}
-                    </Select>
-                </FormControl>
+                {artists && artists.map((artist, i)=><Box key={i}><p>{artist.category}</p><RemoveCircleIcon onClick={()=> removeArtist(i)}/></Box> )}
+
+                <ArtistCategory  artists={artists} setArtists={setArtists} musicians={musicians} setMusicians={setMusicians}/>
 
                 <FormControl sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel id="demo-simple-select-required-label">Venue*</InputLabel>
@@ -183,17 +196,16 @@ const payload={
                         {venues.map((venue, i)=> <MenuItem key={i} value={venue._id}>{venue.name}</MenuItem>)}
                     </Select>
                 </FormControl>
-                
                 <TextField type='number' id="outlined-basic" label="Artist Fee" variant="outlined" InputProps={{startAdornment: 
                     <InputAdornment position="start">£</InputAdornment>, }} value={artistFee} onChange={(e)=>setArtistFee(e.target.value)} />
                 <TextField  type='number' id="outlined-basic" label="Venue Fee" variant="outlined" InputProps={{startAdornment: 
                     <InputAdornment position="start">£</InputAdornment>,}}value={venueFee} onChange={(e)=>setVenueFee(e.target.value)} />
                 <DatePicker  format="DD/MM/YYYY" label="Date" value={date} onChange={(newValue) => { setDate(newValue);}} renderInput={(params) => <TextField {...params} />}/>
 
-                {setTimes.map((set, i)=>  <TextField key={i} type='text' id="outlined-basic" label={`Set ${i+1}`} variant="outlined" value={set} onChange={(e)=> changeSets(i, e)}/>)}
+                {setTimes.map((set, i)=>  <TextField key={i} type='text' id="outlined-basic" label={`Set ${i+1}`} variant="outlined" value={`${set.from} - ${set.to}`} onChange={(e)=> changeSets(i, e)}/>)}
 
                 <TextField multiline rows={4} type='text' id="outlined-basic" label="Notes" variant="outlined" value={notes} onChange={(e)=> setNotes(e.target.value)}/>
-                <Button variant="contained" onClick={addEvent}>Add</Button>
+                <Button variant="contained" onClick={addEvent}>Add Event</Button>
 
             </Box>
         </Box>

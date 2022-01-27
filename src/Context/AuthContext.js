@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getAuth, signInWithEmailAndPassword, signOut, sendPasswordResetEmail,onAuthStateChanged } from "firebase/auth";
 import { toast } from "react-toastify";
-import app from '../Firebase'
+import auth from '../Firebase'
+import axios from 'axios'
 
 
 const AuthContext = createContext()
@@ -14,21 +15,25 @@ export function AuthProvider({children}){
 
     const [currentUser, setCurrentUser] = useState()
     const [loading, setLoading] = useState(true)
+    const [role, setRole] = useState()
 
     useEffect(()=>{
       const unsubscribe = onAuthStateChanged(auth, (user) => {
-       setCurrentUser(user)
-       setLoading(false)
+        if(user){
+          setCurrentUser(user)
+          axios.post(`${process.env.REACT_APP_MG_API}/get-artist-by-id`, {_id: user.uid}).then(function (res){
+            const role = res.data.role
+            setRole(role)
+          })
+        }
+        setLoading(false)
+
       });
 
       return unsubscribe
     },[])
 
-    const auth = getAuth(app);
 
-    const logoutUser = () =>{
-        signOut(auth)
-    }
 
     const resetPassword = (email) =>{
         sendPasswordResetEmail(auth, email)
@@ -43,12 +48,11 @@ export function AuthProvider({children}){
     
 
     const value= {
-         logoutUser, currentUser, setCurrentUser, resetPassword
+          currentUser, setCurrentUser, resetPassword, setRole, role
     }
 
     return (
         <AuthContext.Provider value={value}>
-          {console.log(currentUser)}
             {!loading && children}
         </AuthContext.Provider>
     )

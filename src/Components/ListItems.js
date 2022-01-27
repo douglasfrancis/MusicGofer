@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 export const mainListItems = (
   <div>
-    <Link to="/">
+    <Link to="/dashboard">
       < ListItem button>
         <ListItemIcon>
           <DashboardIcon sx={{color: 'white'}} />
@@ -47,17 +47,5 @@ export const mainListItems = (
       </ListItem>
     </Link>
    
-  </div>
-);
-
-export const secondaryListItems = (
-  <div>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon sx={{color: 'white'}}/>
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItem>
-    
   </div>
 );

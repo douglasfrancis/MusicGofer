@@ -31,7 +31,7 @@ export default function Venues() {
   },[])
 
   const getVenues=()=>{
-    axios.get("http://localhost:4000/get-venues").then(function(res){
+    axios.get(`${process.env.REACT_APP_MG_API}/get-venues`).then(function(res){
       setVenues(res.data)
     })
   }
@@ -48,12 +48,12 @@ export default function Venues() {
 
   return (
     <Box sx={{textAlign: 'center'}}>
-           {venue && <ViewVenue venue={venue} openVenue={openVenue} setOpenVenue={setOpenVenue} setVenue={setVenue}/>}
+           {venue && <ViewVenue venue={venue} openVenue={openVenue} setOpenVenue={setOpenVenue} setVenue={setVenue} getVenues={getVenues}/>}
 
       <Fab color="primary" aria-label="add" sx={{margin: '20px' }}>
         <AddIcon onClick={handleOpen} />
       </Fab>
-      <AddVenue open={open} setOpen={setOpen}/>
+      <AddVenue open={open} setOpen={setOpen} getVenues={getVenues}/>
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>

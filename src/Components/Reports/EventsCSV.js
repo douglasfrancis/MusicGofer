@@ -22,7 +22,7 @@ export default function EventsCSV() {
 
 
     const getEvents = async ()=>{
-        const response = await axios.post('http://localhost:4000/get-events-by-date-range', {dateFrom: value[0], dateTo: value[1]})
+        const response = await axios.post(`${process.env.REACT_APP_MG_API}/get-events-by-date-range`, {dateFrom: value[0], dateTo: value[1]})
         const data = await response.data
         setEventData(data)
 

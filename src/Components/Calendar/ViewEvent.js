@@ -39,6 +39,7 @@ export default function ViewEvent({openEvent, setOpenEvent, event, setEvent, eve
 
   //Form state
   const [artist, setArtist] = useState(event.artist);
+  const [artistId, setArtistId] = useState(event.artistId)
   const [venueName, setVenueName] = useState(event.venueName);
   const [venueId, setVenueId] = useState(event.venueId);
   const [artistFee, setArtistFee] = useState(event.artistFee)
@@ -69,13 +70,13 @@ useEffect(()=>{
 }, [artist])
 
 const getMusicians = () =>{
-    axios.get('http://localhost:4000/get-artists').then(function(res){
+    axios.get(`${process.env.REACT_APP_MG_API}/get-artists`).then(function(res){
         setMusicians(res.data)
     })
 }
 
 const getVenues = () =>{
-    axios.get('http://localhost:4000/get-venues').then(function(res){
+    axios.get(`${process.env.REACT_APP_MG_API}/get-venues`).then(function(res){
         setVenues(res.data)
     })
 }
@@ -83,27 +84,36 @@ const getVenues = () =>{
 const getVenueById = (id) =>{
 
   const idPayload = {id}
-  axios.post('http://localhost:4000/get-venue-by-id', idPayload).then(function(res){
+  axios.post(`${process.env.REACT_APP_MG_API}/get-venue-by-id`, idPayload).then(function(res){
         const {artistFee, venueFee, setTimes, name} = res.data
         setArtistFee(artistFee); setVenueFee(venueFee);setSetTimes(setTimes);setVenueName(name)
+})
+}
+
+const getArtistById = (id) =>{
+
+  const idPayload = {id}
+  axios.post(`${process.env.REACT_APP_MG_API}/get-artist-by-id`, idPayload).then(function(res){
+        const {name} = res.data
+        setArtist(name); 
 })
 }
 const payload={
     id: event._id,
     payload: {
-        title: `${venueName}(${artist})`, artist, venueName, venueId, artistFee, venueFee, date, setTimes, notes, status, backgroundColor, borderColor, allDay: false, display: 'block'
+        title: `${venueName}(${artist})`, artist, artistId, venueName, venueId, artistFee, venueFee, date, setTimes, notes, status, backgroundColor, borderColor, allDay: false, display: 'block'
 
     }
 }
   const clearForm = () =>{
-      setArtist("");setVenueId("");setDate(null); setArtistFee(0);setVenueFee(0);setNotes("");setSetTimes([])
+      setArtist("");setArtistId("");setVenueId("");setDate(null); setArtistFee(0);setVenueFee(0);setNotes("");setSetTimes([])
   }
 
   const updateEvent = () => {
       if(!venueName || !date || !artistFee || !venueFee){
         toast.error("Please add all fields")
       }else{
-        axios.post("http://localhost:4000/update-event", payload).then(function(res){
+        axios.post(`${process.env.REACT_APP_MG_API}/update-event`, payload).then(function(res){
             toast.success(res.data)
                {/*axios.post("http://localhost:4000/new-booking", {name: "Test Name", email: "dougiefrancis@gmail.com"}).then(function(res){
               if(res.data.success) toast.success(res.data.msg)
@@ -115,10 +125,11 @@ const payload={
 }
 
 const deleteEvent = () => {
-  axios.post('http://localhost:4000/delete-event', {id:event._id}).then(function(res){
+  axios.post(`${process.env.REACT_APP_MG_API}/delete-event`, {id:event._id}).then(function(res){
     toast.success(res.data)
+    getEvents()
+
   })
-  getEvents()
 }
 
   const changeSets=(i, e)=>{
@@ -147,14 +158,14 @@ const deleteEvent = () => {
                     <Select
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
-                    value={artist}
+                    value={artistId}
                     label="Artist"
-                    onChange={(e)=>setArtist(e.target.value)}
+                    onChange={(e)=>{getArtistById(e.target.value);setArtistId(e.target.value)}}
                     >
                     <MenuItem value="">
                         <em>None</em>
                     </MenuItem>
-                    {musicians.map((musician, i)=><MenuItem key={i} value={musician.name}>{musician.name}</MenuItem>)}
+                    {musicians.map((musician, i)=><MenuItem key={i} value={musician._id}>{musician.name}</MenuItem>)}
                     </Select>
                 </FormControl>
 
@@ -181,7 +192,7 @@ const deleteEvent = () => {
                     <InputAdornment position="start">£</InputAdornment>,}}value={venueFee} onChange={(e)=>setVenueFee(e.target.value)} />
                 <DatePicker  format="DD-MM-YYYY" label="Date" value={date} onChange={(newValue) => { setDate(newValue);}} renderInput={(params) => <TextField {...params} />}/>
 
-                {setTimes.map((set, i)=>  <TextField key={i} type='text' id="outlined-basic" label={`Set ${i+1}`} variant="outlined" value={set} onChange={(e)=> changeSets(i, e)}/>)}
+                {setTimes.map((set, i)=>  <TextField key={i} type='text' id="outlined-basic" label={`Set ${i+1}`} variant="outlined" value={`${set.from} - ${set.to}`} onChange={(e)=> changeSets(i, e)}/>)}
 
                 <TextField multiline rows={4} type='text' id="outlined-basic" label="Notes" variant="outlined" value={notes} onChange={(e)=> setNotes(e.target.value)}/>
                 <Button variant="contained" onClick={updateEvent}>Update</Button>

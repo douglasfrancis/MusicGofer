@@ -12,25 +12,16 @@ import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import {signOut} from 'firebase/auth'
 import Button from '@mui/material/Button';
-import RequireAuth from './Auth/RequireAuth'
 import auth from '../Firebase'
-
+import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems, secondaryListItems } from './ListItems';
+import { mainListItems } from './ListItems';
 
 //pages
-import Calendar from './Calendar/Calendar'
-import Dashboard from './Dashboard/Dashboard';
-import ArtistDashboard from './Dashboard/ArtistDashboard'
-import Artists from './artists/Artists';
-import Venues from './Venues/Venues';
-import Login from './Auth/Login';
-import Confirm from './Calendar/Confirm';
-import Decline from './Calendar/Decline';
-import ArtistCalendar from './Calendar/ArtistCalendar';
-import UserProfile from './Profile/UserProfile';
+
 import { useAuth } from '../Context/AuthContext';
+import { Outlet } from 'react-router-dom';
 
 
 function Copyright(props) {
@@ -100,23 +91,22 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-export default function Template() {
+export default function AdminUI() {
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-
+  let navigate = useNavigate()
   function handleLogout(){
     signOut(auth)
+    navigate('/login')
   }
-
-  const {role} = useAuth()
 
 
   return (
     <ThemeProvider theme={mdTheme}>
-        <Router>
+        
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
@@ -164,7 +154,6 @@ export default function Template() {
           </Toolbar>
           <Divider />
           <List>{mainListItems}</List>
-         
         </Drawer>
         <Box
           component="main"
@@ -180,34 +169,12 @@ export default function Template() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        
-            <Routes>
-                <Route exact path='/' element={<RequireAuth><Dashboard/></RequireAuth>} />
-                <Route exact path='/dashboard' element={<RequireAuth><ArtistDashboard/></RequireAuth>} />
-
-                <Route exact path='/login' element={<Login/>} />
-                <Route exact path='/calendar' element={<RequireAuth > 
-                                                         {role==='user' ?<ArtistCalendar/> :<Calendar/>} 
-                                                       </RequireAuth>} />
-                <Route exact path='/artist-calendar' element={<RequireAuth><Calendar/></RequireAuth>} />
-                <Route exact path='/profile' element={<RequireAuth><UserProfile/></RequireAuth>} />
-
-
-                <Route exact path='/artists' element={<RequireAuth > <Artists/></RequireAuth>} />
-                <Route exact path='/venues' element={<RequireAuth > <Venues/></RequireAuth>} />
-                <Route exact path='/confirm/:id' element={<Confirm/>} />
-                <Route exact path='/decline/:id' element={<Decline/>} />
-
-            </Routes>
-        
-              
-            
+            <Outlet />
             <Copyright sx={{ pt: 4 }} />
           </Container>
         </Box>
       </Box>
-      </Router>
+     
     </ThemeProvider>
   );
 }
-

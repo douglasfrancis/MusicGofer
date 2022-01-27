@@ -15,12 +15,8 @@ import { toast } from 'react-toastify'
 import {useAuth} from '../../Context/AuthContext'
 
 //Auth
-import app from '../../Firebase'
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-
-
-
-const auth = getAuth(app);
+import {  signInWithEmailAndPassword } from "firebase/auth";
+import auth from '../../Firebase'
 
 const theme = createTheme();
 
@@ -49,7 +45,7 @@ export default function Login() {
         signInWithEmailAndPassword(auth, email, password)
         .then(() => {
           toast.success("Successfully logged in")
-          navigate('/')
+          navigate('/dashboard')
         })
         .catch((error) => {
           const errorCode = error.code;

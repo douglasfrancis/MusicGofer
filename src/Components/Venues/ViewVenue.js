@@ -6,6 +6,8 @@ import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import TimePicker from '@mui/lab/TimePicker';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 const style = {
     position: 'absolute',
@@ -17,9 +19,10 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    overflow: 'auto'
   };
 
-export default function ViewVenue( {venue, openVenue, setVenue, setOpenVenue}) {
+export default function ViewVenue( {venue, openVenue, setVenue, setOpenVenue, getVenues}) {
 
 
    const [name, setName] = useState(venue.name)
@@ -43,20 +46,21 @@ export default function ViewVenue( {venue, openVenue, setVenue, setOpenVenue}) {
   const payload = {
     id: venue._id,
     payload: {
-    name, address, artistFee, venueFee, equipment, contactEmail, contactName, setTimes
+    name, address, artistFee, venueFee, equipment, contactEmail, contactName, setTimes, startTime: setTimes[0]?.from
     }
   }
 
   const addSet =()=>{
-    let times = `${from} - ${to}`
+    let times = {from: from.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),to: to.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
 
     if(!to || !from){
       toast.error("Please add start and end time")
+    } else if( to <= from){
+      toast.error("Start of set must be before the end")
     } else {
       setSetTimes([...setTimes, times]);
       clearTimes();
-    }
-    
+    } 
 }
 
 const clearTimes = () =>{
@@ -68,10 +72,16 @@ const clearFields = () =>{
 }
 
 const updateVenue = () =>{
-  axios.post('http://localhost:4000/update-venue', payload).then(function(res){
+  axios.post(`${process.env.REACT_APP_MG_API}/update-venue`, payload).then(function(res){
     toast.success(res.data)
+    getVenues()
   })
 }
+
+const removeSet = (i)=>{
+  setTimes.splice(i, 1)
+}
+
     return (
         <div>
         <Modal
@@ -80,7 +90,7 @@ const updateVenue = () =>{
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box sx={style}>
+          <Box sx={style} component="div" >
             <Box component="form"
             sx={{'& > :not(style)': { m: 1, width: '40ch' }, textAlign:'center'}} noValidate autoComplete="off">
                 
@@ -96,11 +106,11 @@ const updateVenue = () =>{
                 <TextField id="outlined-basic" label="Contact Email Address" variant="outlined" value={contactEmail} onChange={(e)=>setContactEmail(e.target.value)}  />
                 <TextField id="outlined-basic" label="Contact Name" variant="outlined" value={contactName} onChange={(e)=>setContactName(e.target.value)} />
                <div>
-                   {setTimes.map((set, i)=> <p key={i}>{set}</p>)}
-                   <label>From</label>
-                <input type='time' value={from} onChange={(e)=> setFrom(e.target.value)} />
-                <label>To</label>
-                <input type='time' value={to} onChange={(e)=> setTo(e.target.value)} />
+               {setTimes.map((set, i)=><div  style={{display: 'flex', alignItems: 'center', justifyContent: 'space-evenly'}}> <p key={i}>{`${set.from} - ${set.to}`}</p><DeleteOutlineIcon onClick={()=> removeSet(i)}/></div>)}
+                   <Box sx={{display: 'flex', m: '0 auto 10px auto'}} >
+                      <TimePicker style={{margin: '5px'}}  value={from} label="From" onChange={(newValue) => {setFrom(newValue);}} renderInput={(params) => <TextField {...params} />}/>
+                      <TimePicker sx={{margin: '5px'}} value={to} label="To" onChange={(newValue) => {setTo(newValue);}} renderInput={(params) => <TextField {...params} />}/>
+                   </Box>
                 <Button variant="contained" onClick={addSet}>Add Set</Button>
                    </div>
 

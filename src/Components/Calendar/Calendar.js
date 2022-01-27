@@ -27,7 +27,7 @@ export default function Calendar() {
   },[])
 
   const getEvents =() =>{
-    axios.get('http://localhost:4000/get-events').then(function(res){
+    axios.get(`${process.env.REACT_APP_MG_API}/get-events`).then(function(res){
       setEvents(res.data)
     })
   }

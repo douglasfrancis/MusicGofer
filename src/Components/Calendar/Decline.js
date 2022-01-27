@@ -23,7 +23,8 @@ export default function Decline() {
     const payload = {
         id: id,
         data: {
-            artist: "",
+            artist: [],
+            artistId: [],
             status: "Unassigned",
             backgroundColor: "red",
             borderColor:"red"
@@ -31,7 +32,7 @@ export default function Decline() {
     }
 
     const declineGig=()=>{
-        axios.post("http://localhost:4000/decline-gig", payload)
+        axios.post(`${process.env.REACT_APP_MG_API}/decline-gig`, payload)
 
     }
 

@@ -6,9 +6,13 @@ import Modal from '@mui/material/Modal';
 import { toast } from 'react-toastify';
 import {useAuth} from '../../Context/AuthContext'
 import axios from 'axios'
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import app from '../../Firebase'
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { createUserWithEmailAndPassword   } from "firebase/auth";
+import auth from '../../Firebase'
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+
 
 const style = {
   position: 'absolute',
@@ -28,24 +32,16 @@ export default function AddMusician({open, setOpen, getMusicians}) {
     clearForm()
   }
 
- const { setCurrentUser} = useAuth()
   //Form state
   const [img, setImg]=useState("https://caretestresources.s3.eu-west-2.amazonaws.com/avatar.png")
   const [name, setName] = useState("")
   const [number, setNumber] = useState("")
   const [email, setEmail] = useState("")
   const [youtube, setYoutube] = useState("")
+  const [category, setCategory] = useState('');
 
-  const storage = getStorage(app);
-  //const userRef = ref(storage, img);
-  //const userImagesRef = ref(storage, `users/${img}`);
- 
-const uploadFile=()=>{
- /* uploadBytes(userImagesRef, file).then((snapshot) => {
-    console.log('Uploaded a blob or file!');
-  });*/
-}
-  const auth = getAuth(app);
+
+
 
   const createUser = async () => {
     if(!name || !number || !email){
@@ -54,29 +50,25 @@ const uploadFile=()=>{
       
         createUserWithEmailAndPassword(auth, email, "password")
         .then((userCredential) => {
-          axios.post('http://localhost:4000/add-artist', {_id: userCredential.user.uid, img, name, number, email, youtube, role: 'user'}).then(function(res){
+          axios.post(`${process.env.REACT_APP_MG_API}/add-artist`, {_id: userCredential.user.uid, img, name, category, number, email, youtube, role: 'user'}).then(function(res){
       toast.success(res.data)
-    })
-          const user = userCredential.user;
-         
-          setCurrentUser(user)
-          setOpen(false)
+      setOpen(false)
           clearForm()
           getMusicians()
-         
+    })
+          
         })
         .catch((error) => { 
             console.log(error)
     
             return toast.error("Error adding artist")
         })
-    
 
   }
 }
 
   const clearForm = () =>{
-    setName("");setNumber("");setEmail("");setYoutube("");setImg("https://caretestresources.s3.eu-west-2.amazonaws.com/avatar.png")
+    setName("");setNumber("");setCategory("");setEmail("");setYoutube("");setImg("https://caretestresources.s3.eu-west-2.amazonaws.com/avatar.png")
   }
 
   return (
@@ -93,10 +85,32 @@ const uploadFile=()=>{
             sx={{'& > :not(style)': { m: 1, width: '40ch' }, textAlign:'center'}} noValidate autoComplete="off">
 
                 <img style={{height: '80px', width: '80px', display:'block', margin: '0 auto', borderRadius:'50%'}} src={img} alt='Artist'/>
-                <input type='file' accept="image/*" onChange={uploadFile}/>
+                <input type='file' accept="image/*" />
                 
                 <TextField id="outlined-basic" label="Musician Name" variant="outlined" value={name} onChange={(e)=>setName(e.target.value)} />
-                <TextField type='number' id="outlined-basic" label="Phone Number (+44 must be included)" variant="outlined" value={number} onChange={(e)=>setNumber(e.target.value)}/>
+                <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+
+                <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={category}
+                label="Category"
+                onChange={(e)=>setCategory(e.target.value)}
+              >
+                    <MenuItem value={'Solo'}>Solo</MenuItem>
+                    <MenuItem value={'Duo'}>Duo</MenuItem>
+                    <MenuItem value={'Drums'}>Drums</MenuItem>
+                    <MenuItem value={'Guitar'}>Guitar</MenuItem>
+                    <MenuItem value={'Bass'}>Bass</MenuItem>
+                    <MenuItem value={'Vocals'}>Vocals</MenuItem>
+                    <MenuItem value={'Sax'}>Sax</MenuItem>
+                    <MenuItem value={'Keys'}>Keys</MenuItem>
+
+              </Select>
+              </FormControl>
+
+                <TextField type='number' id="outlined-basic" label="Phone Number" variant="outlined" value={number} onChange={(e)=>setNumber(e.target.value)}/>
                 <TextField type='email' id="outlined-basic" label="Email Address" variant="outlined" value={email} onChange={(e)=>setEmail(e.target.value)}/>
                 <TextField id="outlined-basic" label="Youtube Link" variant="outlined" value={youtube} onChange={(e)=>setYoutube(e.target.value)}/>
 

@@ -31,7 +31,7 @@ export default function Confirm() {
     }
 
     const confirmGig =()=>{
-        axios.post("http://localhost:4000/confirm-gig", payload)
+        axios.post(`${process.env.REACT_APP_MG_API}/confirm-gig`, payload)
     }
     return (
         <div style={style}>
