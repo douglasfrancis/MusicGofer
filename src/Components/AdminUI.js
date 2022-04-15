@@ -108,6 +108,10 @@ export default function AdminUI() {
     navigate('/login')
   }
 
+  React.useEffect(()=>{
+    navigate('/dashboard')
+  },[])
+
 
   return (
     <ThemeProvider theme={mdTheme}>
