@@ -39,7 +39,7 @@ export default function ViewEvent({openEvent, setOpenEvent, event, setEvent, eve
 
   //Form state
   const [artist, setArtist] = useState(event.artist);
-  const [artistId, setArtistId] = useState(event.artistId)
+  const [artistId, setArtistId] = useState(event.artists)
   const [venueName, setVenueName] = useState(event.venueName);
   const [venueId, setVenueId] = useState(event.venueId);
   const [artistFee, setArtistFee] = useState(event.artistFee)

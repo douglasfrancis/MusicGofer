@@ -4,6 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from '@fullcalendar/list'
 import AddEvent from './AddEvent';
+import AddRecurringEvent from './AddRecurringEvent';
 import ViewEvent from './ViewEvent'
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
@@ -11,15 +12,16 @@ import axios from 'axios';
 
 export default function Calendar() {
   const [open, setOpen] = useState(false);
+  const [openRecurring, setOpenRecurring] = useState(false);
   const [events, setEvents] = useState([])
   const [date, setDate] = useState(null)
   const [eventDate, setEventDate] = useState(null)
   const [event, setEvent] = useState()
-
   const [openEvent, setOpenEvent] = useState(false);
 
 
   const handleOpen = () => setOpen(true); 
+  const handleOpenRecurring = () => setOpenRecurring(true); 
   const handleOpenEvent = () => setOpenEvent(true); 
 
   useEffect(()=>{
@@ -49,11 +51,17 @@ export default function Calendar() {
   
     return (
       <>
-      <Fab color="primary" aria-label="add" sx={{margin: '20px' }}>
-        <AddIcon onClick={handleOpen} />
+      <Fab color="primary" aria-label="add" sx={{margin: '20px' }} onClick={handleOpen} >
+        <AddIcon />
       </Fab>
 
+      {/*<Fab variant="extended" onClick={handleOpenRecurring}>
+        <AddIcon sx={{ mr: 1 }} />
+        Add Recurring Event
+    </Fab>*/}
+
       <AddEvent getEvents={getEvents} open={open} setOpen={setOpen} chosenDate={date}/>
+      <AddRecurringEvent getEvents={getEvents} open={openRecurring} setOpen={setOpenRecurring} />
 
       {event && <ViewEvent openEvent={openEvent} setOpenEvent={setOpenEvent} event={event} setEvent={setEvent} eventDate={eventDate} getEvents={getEvents}/>}
 

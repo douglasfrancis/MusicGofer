@@ -52,8 +52,8 @@ export default function Artists() {
 
       {artist && <ViewArtist artist={artist} openArtist={openArtist} setOpenArtist={setOpenArtist} setArtist={setArtist} getMusicians={getMusicians}/>}
 
-      <Fab color="primary" aria-label="add" sx={{margin: '20px' }}>
-        <AddIcon onClick={handleOpen} />
+      <Fab color="primary" aria-label="add" sx={{margin: '20px' }} onClick={handleOpen}>
+        <AddIcon  />
       </Fab>
 
       <AddMusician open={open} setOpen={setOpen} getMusicians={getMusicians}/>
@@ -71,12 +71,12 @@ export default function Artists() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {artistDb.map((musician) => (
+          {artistDb.map((musician, i) => (
             <TableRow onClick={()=> view(musician) }
-              key={musician.name}
+              key={i}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell ><img style={{height: '60px', width:'60px', borderRadius:'50%'}} src={musician.img} alt='Artist'/></TableCell>
+              <TableCell ><img style={{maxHeight: '60px', maxWidth:'60px', borderRadius:'50%'}} src={musician.img} alt='Artist'/></TableCell>
 
               <TableCell component="th" scope="artistDb">{musician.name}</TableCell>
               <TableCell align="left">{musician.category}</TableCell>

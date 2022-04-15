@@ -50,8 +50,8 @@ export default function Venues() {
     <Box sx={{textAlign: 'center'}}>
            {venue && <ViewVenue venue={venue} openVenue={openVenue} setOpenVenue={setOpenVenue} setVenue={setVenue} getVenues={getVenues}/>}
 
-      <Fab color="primary" aria-label="add" sx={{margin: '20px' }}>
-        <AddIcon onClick={handleOpen} />
+      <Fab color="primary" aria-label="add" sx={{margin: '20px' }} onClick={handleOpen} >
+        <AddIcon />
       </Fab>
       <AddVenue open={open} setOpen={setOpen} getVenues={getVenues}/>
     <TableContainer component={Paper}>
@@ -66,22 +66,17 @@ export default function Venues() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {venues.map((venue) => (<>
+          {venues.map((venue, i) => (
 
-            <TableRow  onClick={()=> view(venue) }
-              key={venue.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
+            <TableRow key={i} onClick={()=> view(venue) } sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
 
-              <TableCell component="th" scope="row">
-                {venue.name}
-              </TableCell>
+              <TableCell component="th" scope="row">{venue.name}</TableCell>
               <TableCell align="left">{venue.address}</TableCell>
               <TableCell align="left">£{venue.artistFee}</TableCell>
               <TableCell align="left">£{venue.venueFee}</TableCell>
               
             </TableRow>
-            </>
+            
           ))}
         </TableBody>
       </Table>

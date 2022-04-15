@@ -16,7 +16,7 @@ import {useAuth} from '../../Context/AuthContext'
 
 //Auth
 import {  signInWithEmailAndPassword } from "firebase/auth";
-import auth from '../../Firebase'
+import {adminAuth} from '../../Firebase'
 
 const theme = createTheme();
 
@@ -36,16 +36,17 @@ export default function Login() {
         }
     }
 
+
     const handleLogin =  (e) =>{
       e.preventDefault();
 
       if(!email || !password){
         toast.error("Please add all fields")
       } else {
-        signInWithEmailAndPassword(auth, email, password)
+        signInWithEmailAndPassword(adminAuth, email, password)
         .then(() => {
-          toast.success("Successfully logged in")
           navigate('/dashboard')
+          
         })
         .catch((error) => {
           const errorCode = error.code;

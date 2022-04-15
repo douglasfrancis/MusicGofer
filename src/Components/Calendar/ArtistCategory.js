@@ -8,12 +8,11 @@ import { Box } from '@mui/material';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import { toast } from 'react-toastify';
-export default function ArtistCategory({  musicians, setArtists, artists, setMusicians}) {
+export default function ArtistCategory({ setArtists, artists, setArtistName, setArtistEmail}) {
+  
+  const [musicians, setMusicians] = useState([])
 
-
-  const [artistId, setArtistId] = useState("")
-  const [artistName, setArtistName] = useState("")
-  const [artistEmail, setArtistEmail] = useState("")
+  
   const [category, setCategory] = useState("")
 
   useEffect(()=>{
@@ -34,7 +33,7 @@ export default function ArtistCategory({  musicians, setArtists, artists, setMus
     })
 }
 
-const addArtist = ()=>{
+/*const addArtist = ()=>{
 
   if(!category){
     toast.error("Please select category")
@@ -43,10 +42,10 @@ const addArtist = ()=>{
     clearFields()
   }
  
-}
+}*/
 
 const clearFields = ()=>{
-  setArtistId("");setArtistName("");setArtistEmail("");setCategory("")
+  setArtists("");setArtistName("");setArtistEmail("");setCategory("")
 }
 
 const getMusiciansByCategory = () =>{
@@ -57,7 +56,7 @@ const getMusiciansByCategory = () =>{
   })
 }
   const getArtistById = (id) =>{
-    setArtistId(id)
+    setArtists(id)
 
     axios.post(`${process.env.REACT_APP_MG_API}/get-artist-by-id`, {_id: id}).then(function(res){
           const {name, email} = res.data
@@ -70,13 +69,13 @@ const getMusiciansByCategory = () =>{
 
   return (
 
-    <Box sx={{ alignItems: 'center', flex: 1}}>
-                <Box sx={{ '& > :not(style)': { m: 1 } }}>
+    <>
+                {/*<Box sx={{ '& > :not(style)': { m: 1 } }}>
                   <Fab color="primary" aria-label="add" variant="extended" onClick={addArtist} >
                     <AddIcon />
                     Add Artist
                   </Fab>
-                </Box>
+                </Box>*/}
     <FormControl sx={{ m: 1, width: '45%' }}>
                     <InputLabel id="demo-simple-select-helper-label">Category</InputLabel>
                     <Select
@@ -105,7 +104,7 @@ const getMusiciansByCategory = () =>{
                     <Select
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
-                    value={artistId}
+                    value={artists}
                     label="Artist"
                     onChange={(e)=>{getArtistById(e.target.value)}}
                     >
@@ -115,7 +114,7 @@ const getMusiciansByCategory = () =>{
                     {musicians.map((musician, i)=><MenuItem key={i}  value={musician._id}>{musician.name}</MenuItem>)}
                     </Select>
                 </FormControl>
-    </Box>
+    </>
   )
   
 }

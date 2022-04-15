@@ -12,15 +12,20 @@ import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import {signOut} from 'firebase/auth'
 import Button from '@mui/material/Button';
-import auth from '../Firebase'
+import {adminAuth} from '../Firebase'
 import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems } from './ListItems';
-
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import PeopleIcon from '@mui/icons-material/People';
+import SettingsIcon from '@mui/icons-material/Settings';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import { Link } from 'react-router-dom';
 //pages
-
-import { useAuth } from '../Context/AuthContext';
 import { Outlet } from 'react-router-dom';
 
 
@@ -99,7 +104,7 @@ export default function AdminUI() {
 
   let navigate = useNavigate()
   function handleLogout(){
-    signOut(auth)
+    signOut(adminAuth)
     navigate('/login')
   }
 
@@ -129,7 +134,7 @@ export default function AdminUI() {
             </IconButton>
             <Box flexGrow={1} justifyContent={'space-between'} display={'flex'}>
               
-              <img style={{height: '40px'}} src={require('../images/MusicGofer_logo2_black.png')} alt='Music Gofer Logo' />
+              <img style={{maxHeight: '40px'}} src={require('../images/MusicGofer_logo2_black.png')} alt='Music Gofer Logo' />
 
              
               <Button align='right'  onClick={handleLogout} variant="outlined" >Logout</Button>
@@ -153,7 +158,55 @@ export default function AdminUI() {
             </IconButton>
           </Toolbar>
           <Divider />
-          <List>{mainListItems}</List>
+          <List>
+          <Link to="/dashboard">
+      < ListItem button>
+        <ListItemIcon>
+          <DashboardIcon sx={{color: 'white'}} />
+        </ListItemIcon>
+        <ListItemText sx={{color: 'white'}} primary="Dashboard" />
+      </ListItem>
+    </Link>
+    
+    < Link to="/calendar">
+      <ListItem button>
+        <ListItemIcon>
+          <CalendarTodayIcon sx={{color: 'white'}}/>
+        </ListItemIcon>
+        <ListItemText primary="Calendar" sx={{color: 'white'}}  />
+      </ListItem>
+    </ Link>
+
+    <Link to='/artists'>
+      <ListItem button>
+        <ListItemIcon>
+          <PeopleIcon sx={{color: 'white'}}/>
+        </ListItemIcon>
+        <ListItemText primary="Artists" sx={{color: 'white'}}  />
+      </ListItem>
+    </Link>
+
+   <Link to='/venues'>
+      <ListItem button>
+        <ListItemIcon>
+          <ApartmentIcon sx={{color: 'white'}}/>
+        </ListItemIcon>
+        <ListItemText primary="Venues" sx={{color: 'white'}}  />
+      </ListItem>
+    </Link>
+
+    <Divider />
+
+
+    <Link to='/settings'>
+      <ListItem button>
+        <ListItemIcon>
+          <SettingsIcon sx={{color: 'white'}}/>
+        </ListItemIcon>
+        <ListItemText primary="Settings" sx={{color: 'white'}}  />
+      </ListItem>
+    </Link>
+          </List>
         </Drawer>
         <Box
           component="main"

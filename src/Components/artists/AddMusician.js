@@ -4,10 +4,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { toast } from 'react-toastify';
-import {useAuth} from '../../Context/AuthContext'
 import axios from 'axios'
-import { createUserWithEmailAndPassword   } from "firebase/auth";
-import auth from '../../Firebase'
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import {artistAuth} from '../../Firebase'
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -48,10 +47,11 @@ export default function AddMusician({open, setOpen, getMusicians}) {
       toast.error("Please add all required fields")
     } else {
       
-        createUserWithEmailAndPassword(auth, email, "password")
-        .then((userCredential) => {
-          axios.post(`${process.env.REACT_APP_MG_API}/add-artist`, {_id: userCredential.user.uid, img, name, category, number, email, youtube, role: 'user'}).then(function(res){
+        createUserWithEmailAndPassword(artistAuth, email, "password")
+        .then(  (userCredential) => {
+          axios.post(`${process.env.REACT_APP_MG_API}/add-artist`, {_id: userCredential.user.uid, img, name, category, number, email, youtube, role: 'user'}).then(function (res){
           toast.success(res.data)
+           
           setOpen(false)
           clearForm()
           getMusicians()

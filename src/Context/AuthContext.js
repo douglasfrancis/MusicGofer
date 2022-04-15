@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getAuth, signInWithEmailAndPassword, signOut, sendPasswordResetEmail,onAuthStateChanged } from "firebase/auth";
+import { sendPasswordResetEmail,onAuthStateChanged } from "firebase/auth";
 import { toast } from "react-toastify";
-import auth from '../Firebase'
-import axios from 'axios'
-
+import {adminAuth} from '../Firebase'
 
 const AuthContext = createContext()
 
@@ -13,30 +11,28 @@ export function useAuth(){
 
 export function AuthProvider({children}){
 
-    const [currentUser, setCurrentUser] = useState()
+    const [currentUser, setCurrentUser] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [role, setRole] = useState()
 
     useEffect(()=>{
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
+      const unsubscribe = onAuthStateChanged(adminAuth, (user) => {
         if(user){
           setCurrentUser(user)
-          axios.post(`${process.env.REACT_APP_MG_API}/get-artist-by-id`, {_id: user.uid}).then(function (res){
-            const role = res.data.role
-            setRole(role)
-          })
+          setLoading(false)
+        } else {
+          setCurrentUser(null)
+          setLoading(false)
         }
-        setLoading(false)
+      
+      })
+    return unsubscribe
 
-      });
-
-      return unsubscribe
     },[])
+  
 
 
-
-    const resetPassword = (email) =>{
-        sendPasswordResetEmail(auth, email)
+  const resetPassword = (email) =>{
+        sendPasswordResetEmail(adminAuth, email)
   .then(() => {
     toast("Please check your email to reset password")
   })
@@ -48,7 +44,7 @@ export function AuthProvider({children}){
     
 
     const value= {
-          currentUser, setCurrentUser, resetPassword, setRole, role
+          currentUser, resetPassword
     }
 
     return (
