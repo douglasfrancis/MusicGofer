@@ -23,7 +23,6 @@ import Decline from './Components/Calendar/Decline';
 import RequireAuth from './Components/Auth/RequireAuth'
 import AdminUI from './Components/AdminUI';
 import TandCs from './Components/TandCs';
-import Settings from './Components/Settings';
 import Unauthorised from './Components/Auth/Unauthorised'
 
 
@@ -51,7 +50,6 @@ function App() {
                       <Route  path='artist-calendar' element={<Calendar/>} />
                       <Route  path='artists' element={ <Artists/>} />
                       <Route  path='venues' element={ <Venues/>} />
-                      <Route  path='settings' element={ <Settings/>} />
                       
                     </Route>
                 </Route>

@@ -49,7 +49,7 @@ export default function AddMusician({open, setOpen, getMusicians}) {
       
         createUserWithEmailAndPassword(artistAuth, email, "password")
         .then(  (userCredential) => {
-          axios.post(`${process.env.REACT_APP_MG_API}/add-artist`, {_id: userCredential.user.uid, img, name, category, number, email, youtube, role: 'user'}).then(function (res){
+          axios.post(`${process.env.REACT_APP_MG_API}/add-artist`, {_id: userCredential.user.uid, img, name, category, number, email, youtube}).then(function (res){
           toast.success(res.data)
            
           setOpen(false)
