@@ -117,7 +117,7 @@ const payload={
   }
 
   const addEvent = () => {
-      if(!venueName || !date || !artistFee || !venueFee){
+      if(!venueName || !date ){
         toast.error("Please add all required fields")
       } else if(!artists) {
           axios.post(`${process.env.REACT_APP_MG_API}/add-event`, payload).then(function(res){
