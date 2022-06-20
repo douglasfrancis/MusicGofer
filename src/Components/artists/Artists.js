@@ -20,7 +20,7 @@ export default function Artists() {
   const handleOpen = () => setOpen(true);
   const [artistDb, setArtistDb] = useState([])
 
-  const [artist, setArtist] = useState()
+  const [artist, setArtist] = useState("")
   const [openArtist, setOpenArtist] = useState(false);
   const handleOpenArtist = () => setOpenArtist(true);
   
@@ -34,6 +34,7 @@ export default function Artists() {
 
     axios.get(`${process.env.REACT_APP_MG_API}/get-artists`).then(function(res){
       setArtistDb(res.data)
+      console.log(res.data)
     })
   }
 

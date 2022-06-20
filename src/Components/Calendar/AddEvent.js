@@ -158,7 +158,6 @@ const payload={
 
   return (
     <div>
-      {console.log(payload)}
       <Modal
         open={open}
         onClose={handleClose}

@@ -22,7 +22,6 @@ import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PeopleIcon from '@mui/icons-material/People';
-import SettingsIcon from '@mui/icons-material/Settings';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import { Link } from 'react-router-dom';
 //pages
@@ -199,17 +198,7 @@ export default function AdminUI() {
       </ListItem>
     </Link>
 
-    <Divider />
-
-
-    <Link to='/settings'>
-      <ListItem button>
-        <ListItemIcon>
-          <SettingsIcon sx={{color: 'white'}}/>
-        </ListItemIcon>
-        <ListItemText primary="Settings" sx={{color: 'white'}}  />
-      </ListItem>
-    </Link>
+    
           </List>
         </Drawer>
         <Box
