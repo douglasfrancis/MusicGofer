@@ -33,6 +33,7 @@ export default function ViewArtist( {artist, openArtist, setOpenArtist, setArtis
     const [email, setEmail] = useState(artist.email)
     const [youtube, setYoutube] = useState(artist.youtube)
     const [category, setCategory] = useState(artist.category);
+    const [loading, setLoading] = useState(false)
 
 
     const handleCloseArtist = () => {
@@ -64,11 +65,13 @@ export default function ViewArtist( {artist, openArtist, setOpenArtist, setArtis
     const storageRef = ref(storage, artist._id);
 
    const uploadImg = (imgRef) =>{
+     setLoading(true)
     uploadBytes(storageRef, imgRef).then((snapshot) => {
       console.log('Uploaded a blob or file!');
       getDownloadURL(ref(storage, artist._id))
   .then((url) => {
    setImg(url)
+   setLoading(false)
   })
   .catch((error) => {
     console.log(error)
@@ -120,7 +123,7 @@ export default function ViewArtist( {artist, openArtist, setOpenArtist, setArtis
               <TextField type='email' id="outlined-basic" label="Email Address" variant="outlined" value={email} onChange={(e)=>setEmail(e.target.value)} disabled/>
               <TextField id="outlined-basic" label="Youtube Link" variant="outlined" value={youtube} onChange={(e)=>setYoutube(e.target.value)}/>
 
-              <Button variant="contained" onClick={updateArtist} >Update</Button>
+              <Button variant="contained" onClick={updateArtist} disabled={loading} >Update</Button>
 
           </Box>
       </Box>
