@@ -13,7 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 import AddMusician from './AddMusician';
 import axios from 'axios';
 import ViewArtist from './ViewArtist';
-
+import './Artists.css'
 
 export default function Artists() {
   const [open, setOpen] = useState(false);
@@ -60,15 +60,15 @@ export default function Artists() {
       <AddMusician open={open} setOpen={setOpen} getMusicians={getMusicians}/>
 
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table  aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Artists</TableCell>
             <TableCell>Name</TableCell>
-            <TableCell align="left">Category</TableCell>
-            <TableCell align="left">Number</TableCell>
-            <TableCell align="left">Email</TableCell>
-            <TableCell align="center">Youtube</TableCell>
+            <TableCell className='clear' align="left">Category</TableCell>
+            <TableCell className='clear' align="left">Number</TableCell>
+            <TableCell className='clear' align="left">Email</TableCell>
+            <TableCell  align="center">Youtube</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -77,13 +77,13 @@ export default function Artists() {
               key={i}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell ><img style={{maxHeight: '60px', maxWidth:'60px', borderRadius:'50%'}} src={musician.img} alt='Artist'/></TableCell>
+              <TableCell  ><img style={{height: '40px', width:'40px', borderRadius:'50%', objectFit:'cover'}} src={musician.img} alt='Artist'/></TableCell>
 
               <TableCell component="th" scope="artistDb">{musician.name}</TableCell>
-              <TableCell align="left">{musician.category}</TableCell>
-              <TableCell align="left">{musician.number}</TableCell>
-              <TableCell align="left">{musician.email}</TableCell>
-              {musician.youtube ? <TableCell align="center"><a href={musician.youtube} target='_blank' ><YouTubeIcon sx={{ color: 'red' }}/></a></TableCell>:<TableCell align="right"></TableCell>}
+              <TableCell className='clear' align="left">{musician.category}</TableCell>
+              <TableCell className='clear' align="left">{musician.number}</TableCell>
+              <TableCell className='clear' align="left">{musician.email}</TableCell>
+              {musician.youtube ? <TableCell  align="center"><a href={musician.youtube} target='_blank' ><YouTubeIcon sx={{ color: 'red' }}/></a></TableCell>:<TableCell  align="right"></TableCell>}
               
             </TableRow>
           ))}

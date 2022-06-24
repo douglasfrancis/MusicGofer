@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-
+import { getStorage } from "firebase/storage";
 
 // Initialize Firebase
 const adminApp = initializeApp({
@@ -23,4 +23,5 @@ const artistApp = initializeApp({
 
 export const adminAuth = getAuth(adminApp)
 export const artistAuth = getAuth(artistApp)
+export const storage = getStorage(adminApp)
 

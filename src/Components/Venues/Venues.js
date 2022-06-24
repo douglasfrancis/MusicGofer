@@ -12,7 +12,8 @@ import AddIcon from '@mui/icons-material/Add';
 import AddVenue from './AddVenue';
 import axios from 'axios';
 import ViewVenue from './ViewVenue';
-
+//css
+import './Venues.css'
 
 
 export default function Venues() {
@@ -55,14 +56,14 @@ export default function Venues() {
       </Fab>
       <AddVenue open={open} setOpen={setOpen} getVenues={getVenues}/>
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table  aria-label="simple table">
         <TableHead>
           <TableRow>
             
-            <TableCell>Name</TableCell>
-            <TableCell align="left">Address</TableCell>
-            <TableCell align="left">Artist Fee</TableCell>
-            <TableCell align="left">Venue Fee</TableCell>
+            <TableCell className='full-view'>Name</TableCell>
+            <TableCell className='clear' align="left">Address</TableCell>
+            <TableCell className='clear' align="left">Artist Fee</TableCell>
+            <TableCell className='clear' align="left">Venue Fee</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -70,10 +71,10 @@ export default function Venues() {
 
             <TableRow key={i} onClick={()=> view(venue) } sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
 
-              <TableCell component="th" scope="row">{venue.name}</TableCell>
-              <TableCell align="left">{venue.address}</TableCell>
-              <TableCell align="left">£{venue.artistFee}</TableCell>
-              <TableCell align="left">£{venue.venueFee}</TableCell>
+              <TableCell className='full-view' component="th" scope="row">{venue.name}</TableCell>
+              <TableCell className='clear'  align="left">{venue.address}</TableCell>
+              <TableCell className='clear' align="left">£{venue.artistFee}</TableCell>
+              <TableCell className='clear' align="left">£{venue.venueFee}</TableCell>
               
             </TableRow>
             

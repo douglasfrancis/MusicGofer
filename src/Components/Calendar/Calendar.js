@@ -67,12 +67,12 @@ export default function Calendar() {
 
       <FullCalendar
          plugins={[ dayGridPlugin, interactionPlugin, listPlugin ]}
-         initialView = 'dayGridMonth'
+         initialView = 'listMonth'
 
         headerToolbar={{
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,dayGridWeek,dayGridDay,listMonth'
+          right: 'dayGridMonth,listMonth'
         }}
         events={ events}
         dateClick={openDay}

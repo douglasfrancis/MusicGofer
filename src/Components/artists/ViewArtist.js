@@ -9,7 +9,9 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-
+//Firebase storage
+import { storage } from '../../Firebase';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const style = {
     position: 'absolute',
@@ -59,7 +61,21 @@ export default function ViewArtist( {artist, openArtist, setOpenArtist, setArtis
       setName("");setNumber("");setCategory("");setEmail("");setYoutube("");setImg("https://caretestresources.s3.eu-west-2.amazonaws.com/avatar.png")
     }
   
-  
+    const storageRef = ref(storage, artist._id);
+
+   const uploadImg = (imgRef) =>{
+    uploadBytes(storageRef, imgRef).then((snapshot) => {
+      console.log('Uploaded a blob or file!');
+      getDownloadURL(ref(storage, artist._id))
+  .then((url) => {
+   setImg(url)
+  })
+  .catch((error) => {
+    console.log(error)
+  });
+    });
+
+   } 
     return (
         <div>
         <Modal
@@ -68,12 +84,13 @@ export default function ViewArtist( {artist, openArtist, setOpenArtist, setArtis
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-         
+
           <Box sx={style}>
           <Box component="form"
           sx={{'& > :not(style)': { m: 1, width: '40ch' }, textAlign:'center'}} noValidate autoComplete="off">
 
-             <img style={{height: '80px', width: '80px', display:'block', margin: '0 auto', borderRadius:'50%'}} src={img} alt='Artist'/>
+             <img style={{height: '80px', width: '80px', display:'block', margin: '0 auto', borderRadius:'50%', objectFit: 'cover'}} src={img} alt='Artist'/>
+             <input type='file' accept="image/*" onChange={(e)=>uploadImg(e.target.files[0])} />
 
               <TextField id="outlined-basic" label="Musician Name" variant="outlined" value={name} onChange={(e)=>setName(e.target.value)} />
               <FormControl fullWidth>

@@ -86,8 +86,7 @@ export default function AddMusician({open, setOpen, getMusicians}) {
             <Box component="form"
             sx={{'& > :not(style)': { m: 1, width: '40ch' }, textAlign:'center'}} noValidate autoComplete="off">
 
-                <img style={{height: '80px', width: '80px', display:'block', margin: '0 auto', borderRadius:'50%'}} src={img} alt='Artist'/>
-                <input type='file' accept="image/*" />
+               
                 
                 <TextField id="outlined-basic" label="Musician Name" variant="outlined" value={name} onChange={(e)=>setName(e.target.value)} />
                 <FormControl fullWidth>
